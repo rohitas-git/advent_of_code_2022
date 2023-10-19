@@ -4,8 +4,8 @@
 // Find which elf is carrying the maximum sum
 
 mod utlis;
-pub use std::fs;
 use utlis::*;
+pub use std::fs;
 const INPUT: &str = "/home/user/dev/tutorial/adventOfCode/2022/day1/src/input.txt";
 
 fn main() {

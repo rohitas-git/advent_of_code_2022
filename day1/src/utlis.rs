@@ -2,12 +2,9 @@ use std::fs;
 use std::path::Path;
 
 pub fn read_calories(input: &str) -> Vec<u32> {
-    let input_path = Path::new(input);
-    let input = fs::read_to_string(input_path).expect("Should read input file content");
-
-    // Split by empty line to get
-    let mut cals_str: Vec<&str> = input.split('\n').collect();
-    cals_str.push("");
+   
+    let mut cals_str = read_lines(input);
+    cals_str.push("".to_string());
 
     let mut calories: Vec<u32> = Vec::new();
     let mut sum = 0;
@@ -23,6 +20,15 @@ pub fn read_calories(input: &str) -> Vec<u32> {
         }
     }
     calories
+}
+
+fn read_lines(file_path: &str) -> Vec<String>{
+    let input_path = Path::new(file_path);
+    let input = fs::read_to_string(input_path).expect("Should read input file content");
+
+    // Split by empty line to get
+    let lines: Vec<String> = input.clone().split('\n').map(|s| s.to_string()).collect();
+    lines
 }
 
 #[cfg(test)]
