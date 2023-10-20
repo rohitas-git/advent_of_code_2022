@@ -14,8 +14,6 @@ Some of the pairs have noticed that one of their assignments fully contains the 
 
 Problem: In how many assignment pairs does one range fully contain the other?
 
-
-
 demo: 
 2-4,6-8
 2-3,4-5
@@ -29,3 +27,4 @@ For the first few pairs, this list means:
     The Elves in the third pair were each assigned three sections: one got sections 5, 6, and 7, while the other also got 7, plus 8 and 9.
 This example list uses single-digit section IDs to make it easier to draw; your actual list might contain larger numbers.
 
+-------PART2-----------------
