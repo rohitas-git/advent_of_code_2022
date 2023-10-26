@@ -12,12 +12,8 @@ struct Area {
 
 impl Area {
     fn contains(&self, other: &Self) -> bool {
-        let l_start = if self.start < other.start {
-            true
-        } else {
-            false
-        };
-        let g_end = if self.end > other.end { true } else { false };
+        let l_start = self.start < other.start;
+        let g_end = self.end > other.end;
 
         if other.start == self.start || other.end == self.end {
             return true;
@@ -39,7 +35,7 @@ impl Area {
         if p2 >= other.start && p2 <= other.end {
             return true;
         }
-        return self.contains(other);
+        self.contains(other)
     }
 }
 
@@ -72,9 +68,9 @@ fn get_areas(input: &str) -> AnyResult<Vec<(Area, Area)>> {
     let mut areas: Vec<(Area, Area)> = Vec::new();
 
     for line in input.lines() {
-        let areas_str: Vec<&str> = line.split(",").collect();
-        let first: Vec<&str> = areas_str[0].split("-").collect();
-        let second: Vec<&str> = areas_str[1].split("-").collect();
+        let areas_str: Vec<&str> = line.split(',').collect();
+        let first: Vec<&str> = areas_str[0].split('-').collect();
+        let second: Vec<&str> = areas_str[1].split('-').collect();
 
         let first_area = {
             let start = first[0].parse::<u32>()?;
