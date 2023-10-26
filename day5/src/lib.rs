@@ -18,10 +18,8 @@ impl Stacks {
         self.number += 1;
     }
 
-    fn get_initial_arrangement() -> Stacks {
+    fn get_initial_arrangement(input: Vec<String>) -> Stacks {
         let mut stacks = Stacks::new();
-        for line in include_str!("demo.txt").lines() {}
-
         stacks
     }
 }
@@ -36,12 +34,13 @@ enum MyError {
 }
 use MyError::*;
 
-fn read_lines(file_path: &str) -> Result<(Vec<String>, Vec<String>), MyError> {
+fn read_input(file_path: &str) -> Result<(Vec<String>, Vec<String>), MyError> {
     use std::fs;
     if let Ok(input) = fs::read_to_string(file_path) {
-        let (arrange, moves): (String, String) = input.split("\n\n").map(|s| s.to_string()).collect();
-        let lines: Vec<String> = input.clone().split('\n').map(|s| s.to_string()).collect();
-        Ok(lines)
+        let input: Vec<String> = input.split("\n\n").map(|s| s.to_string()).collect();
+        let arrangement: Vec<String> = input[0].clone().split('\n').map(|s| s.to_string()).collect();
+        let moves: Vec<String> = input[0].clone().split('\n').map(|s| s.to_string()).collect();
+        Ok((arrangement, moves))
     } else {
         Err(IoError("Unable to read input file".into()))
     }
@@ -54,9 +53,7 @@ mod test_lib {
 
     #[test]
     fn test_lines() {
-        let lines = read_lines(INPUT).unwrap();
-        println!("{:?}", lines[0]);
-        let (arrangement, moves) = lines.split("\n\n");
-       
+       let (setup, moves) = read_input(INPUT).unwrap();
+       println!("{:?}", setup[setup.len() - 1]);
     }
 }
