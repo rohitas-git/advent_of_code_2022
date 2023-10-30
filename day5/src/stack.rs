@@ -26,6 +26,14 @@ impl Stack {
     fn new() -> Stack {
         Stack(Vec::new())
     }
+
+    fn last(&self) -> Option<&Item> {
+        self.0.last()
+    }
+
+    fn len(&self) -> usize {
+        self.0.len()
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -72,21 +80,41 @@ impl Stacks {
         Ok(stacks)
     }
 
-    pub fn do_move(&mut self, todo: Move){
-        
-        for i in 1..todo.number{
-            let popped = self.stacks[todo.from_stack].pop().expect("Enough items to pop");
-            self.stacks[todo.to_stack].push(popped);
+    pub fn do_move_single_crate(&mut self, todo: &Move) {
+        for i in 1..=todo.number {
+            let popped = self.stacks[todo.from_stack - 1]
+                .pop()
+                .expect("None can't be popped");
+            self.stacks[todo.to_stack - 1].push(popped);
         }
     }
 
-    pub fn stack_tops(&self) -> Vec<Item>{
-        let mut tops = Vec::new();
+    pub fn do_move_multiple_crates(&mut self, todo: &Move) {
+        let from_len = self.stacks[todo.from_stack - 1].len();
+        let mid = from_len
+            .checked_sub(todo.number as usize)
+            .expect("Overflow occured during substraction");
 
-        for stack in self.stacks.iter(){
-            // tops.push(stack.last())
+        let mut from_stack = &mut self.stacks[todo.from_stack - 1].clone();
+        let mut to_stack = &mut self.stacks[todo.to_stack - 1].clone();
+        
+        for item in from_stack.0.drain(mid..from_len) {
+            to_stack.push(item);
         }
 
+        // dbg!(&to_stack);
+        self.stacks[todo.from_stack - 1] = from_stack.to_owned();
+        self.stacks[todo.to_stack - 1] = to_stack.to_owned();
+    }
+
+    pub fn get_stack_tops(&self) -> Vec<Item> {
+        let mut tops = Vec::new();
+        let mut top_str = "".to_string();
+        for stack in self.stacks.iter() {
+            tops.push(stack.last().unwrap().to_owned());
+            top_str.push(tops.last().unwrap().get_char());
+        }
+        dbg!(top_str);
         tops
     }
 }
@@ -117,5 +145,25 @@ mod test_stacks {
     fn get_stack_arrangement() {
         let (setup_str, moves_str) = read_input(INPUT).unwrap();
         dbg!(Stacks::from_arrangement(setup_str));
+    }
+
+    #[test]
+    fn get_multiple_move_ok() {
+        let (setup_str, moves_str) = read_input(INPUT).unwrap();
+        let mut stacks = Stacks::from_arrangement(setup_str).unwrap();
+        let all_moves = Move::read_moves(moves_str);
+        let todo = all_moves.get(3).unwrap();
+        let from_stack = &stacks.stacks[todo.from_stack - 1];
+        let to_stack = &stacks.stacks[todo.to_stack - 1];
+
+        dbg!(from_stack);
+        dbg!(to_stack);
+        dbg!(todo);
+
+        stacks.do_move_multiple_crates(todo.to_owned());
+        let from_stack = &stacks.stacks[todo.from_stack - 1];
+        let to_stack = &stacks.stacks[todo.to_stack - 1];
+        dbg!(from_stack);
+        dbg!(to_stack);
     }
 }

@@ -18,6 +18,10 @@ impl TryFrom<u8> for Item {
 }
 
 impl Item {
+    pub fn get_char(&self) -> char {
+        self.0 as char 
+    }
+
     pub fn get_crate(item_str: &str) -> Result<Item, color_eyre::Report> {
         let item_str = item_str
             .split(' ')
@@ -72,7 +76,7 @@ impl Move{
             all_moves.push(this_move);
         }
 
-        dbg!(all_moves.clone());
+        // dbg!(all_moves.clone());
         all_moves
     }
 }
