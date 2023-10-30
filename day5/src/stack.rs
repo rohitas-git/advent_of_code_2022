@@ -160,7 +160,7 @@ mod test_stacks {
         dbg!(to_stack);
         dbg!(todo);
 
-        stacks.do_move_multiple_crates(todo.to_owned());
+        stacks.do_move_multiple_crates(todo);
         let from_stack = &stacks.stacks[todo.from_stack - 1];
         let to_stack = &stacks.stacks[todo.to_stack - 1];
         dbg!(from_stack);
