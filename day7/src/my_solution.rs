@@ -6,6 +6,5 @@
 
 // Find what is needed from data
 
-// mod sol1;
-// mod utils;
-mod sol2;
+pub mod utils;
+mod sol1;

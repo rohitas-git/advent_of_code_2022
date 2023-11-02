@@ -1,20 +1,23 @@
 
+#[derive(Debug, Clone)]
 pub enum Line {
-    Command(Command),
+    Command(Cmd),
     Entry(Entry),
 }
 
-
-pub enum Command {
+#[derive(Debug, Clone)]
+pub enum Cmd {
     Cd(GoTo),
     Ls,
 }
 
+#[derive(Debug, Clone)]
 pub enum Entry {
     DirDescription(String),
     FileDescription { name: String, size: u32 },
 }
 
+#[derive(Debug, Clone)]
 pub enum GoTo {
     DirName(String),
     Parent,
@@ -22,29 +25,28 @@ pub enum GoTo {
 }
 
 pub use GoTo::*;
-pub use Line::*;
-pub use Command::*;
+pub use Cmd::*;
 pub use Entry::*;
 
 pub fn parse_line(line: &str) -> Line {
     if line.contains("$") && line.contains("cd") {
         let content: Vec<&str> = line.split(" ").collect();
         let detail = match content[2] {
-            "/" => return Command(Cd(GoTo::Root)),
-            ".." => return Command(Cd(GoTo::Parent)),
-            dirname => Command(Cd(GoTo::DirName(dirname.to_string()))),
+            "/" => return Line::Command(Cd(GoTo::Root)),
+            ".." => return Line::Command(Cd(GoTo::Parent)),
+            dirname => Line::Command(Cd(GoTo::DirName(dirname.to_string()))),
         };
         return detail;
     }
     if line.contains("$") && line.contains("ls") {
-        return Command(Ls);
+        return Line::Command(Ls);
     }
     if line.contains("dir") {
         let content: Vec<&str> = line.split(" ").collect();
-        return Entry(DirDescription(content[1].to_string()));
+        return Line::Entry(DirDescription(content[1].to_string()));
     } else if line.is_ascii() {
         let content: Vec<&str> = line.split(" ").collect();
-        return Entry(FileDescription {
+        return Line::Entry(FileDescription {
             name: content[1].to_string(),
             size: content[0].parse::<u32>().expect("Parsing of file size"),
         });
